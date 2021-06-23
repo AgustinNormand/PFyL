@@ -1,5 +1,17 @@
 #lang racket
 
+(define (indexOf elemento lista)
+    (indexOfAux elemento lista 0)
+)
+
+(define (indexOfAux elemento lista indiceActual)
+    (cond
+        ((null? lista) -1)
+        ((equal? (car lista) elemento) indiceActual)
+        (else (indexOfAux elemento (cdr lista) (+ indiceActual 1)))
+    )
+)
+
 (define (nPrimerosRecursividadCola cantidad lista)
         (nPrimerosAux cantidad lista 0 '()))
 
@@ -14,7 +26,6 @@
                             #|Esto está medio confuso, lo intuitivo era (list listaAcumuladora (car lista))
                               pero eso devolvía parentesis de más y quedaba resprolijo |#
 
-(define (nPrimerosRecursividadPila cantidadElementos lista)
-        (cond ((= cantidadElementos 0) '())
-              ((null? lista) '())
-              (else (cons (car lista) (nPrimerosRecursividadPila (- cantidadElementos 1) (cdr lista))))))
+(define (anteriores elemento lista)
+    (nPrimerosRecursividadCola (indexOf elemento lista) lista)
+)
