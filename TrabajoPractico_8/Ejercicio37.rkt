@@ -1,43 +1,39 @@
 #lang racket
 
-(define (clasifica lista)
-    (list
-        (cons 'helado (contarHelados lista))
-        (cons 'frio (contarFrios lista))
-        (cons 'templado (contarTemplados lista))
-        (cons 'calido (contarCalidos lista))
-    )
+(define (nivelMasProfundo elemento lista)
+    (nivelMasProfundoAux elemento lista 1 0)
 )
 
-(define (contarHelados lista)
+(define (nivelMasProfundoAux elemento lista nivelActual nivelMaximo)
     (cond
-        ((null? lista) 0)
-        ((<= (car lista) 0) (+ 1 (contarHelados (cdr lista))))
-        (else (contarHelados (cdr lista)))
-    )
-)
+        ((null? lista) nivelMaximo)
+        ((list? (car lista)) 
+            (cond
+                (
+                    (> 
+                        (nivelMasProfundoAux elemento (car lista) (+ nivelActual 1) nivelMaximo)
+                        nivelMaximo
+                    )
 
-(define (contarFrios lista)
-    (cond
-        ((null? lista) 0)
-        ((and (> (car lista) 0) (<= (car lista) 10)) (+ 1 (contarFrios (cdr lista))))
-        (else (contarFrios (cdr lista)))
-    )
-)
-
-(define (contarTemplados lista)
-    (cond
-        ((null? lista) 0)
-        ((and (> (car lista) 10) (<= (car lista) 25)) (+ 1 (contarTemplados (cdr lista))))
-        (else (contarTemplados (cdr lista)))
-    )
-)
-
-
-(define (contarCalidos lista)
-    (cond
-        ((null? lista) 0)
-        ((> (car lista) 25) (+ 1 (contarCalidos (cdr lista))))
-        (else (contarCalidos (cdr lista)))
+                    (nivelMasProfundoAux elemento (cdr lista) nivelActual (nivelMasProfundoAux elemento (car lista) (+ nivelActual 1) nivelMaximo))
+                )
+                (else
+                    (nivelMasProfundoAux elemento (cdr lista) nivelActual nivelMaximo)
+                )
+            )
+        )
+        ((equal? (car lista) elemento) 
+            (cond
+                ((> nivelActual nivelMaximo)
+                    (nivelMasProfundoAux elemento (cdr lista) nivelActual nivelActual)
+                )
+                (else 
+                    (nivelMasProfundoAux elemento (cdr lista) nivelActual nivelMaximo)
+                )
+            )
+        )
+        (else
+            (nivelMasProfundoAux elemento (cdr lista) nivelActual nivelMaximo)
+        )
     )
 )
