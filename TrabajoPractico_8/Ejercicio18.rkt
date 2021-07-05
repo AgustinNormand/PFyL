@@ -1,18 +1,20 @@
 #lang racket
 
 (define (xMayMen lista separador)
-    (xMayMenAux lista separador '())
+    (xMayMenAux lista separador '() '())
 )
 
-(define (xMayMenAux lista separador listaAcumuladora)
+(define (xMayMenAux lista separador listaMenores listaMayores)
     (cond
-        ((equal? (car lista) separador) (list listaAcumuladora (cdr lista)))
-        (else 
-            (xMayMenAux 
-                (cdr lista) 
-                separador 
-                (append listaAcumuladora (list (car lista)))
-            )
+        ((null? lista) (cons listaMenores (list listaMayores)))
+        ((< (car lista) separador)
+            (xMayMenAux (cdr lista) separador (cons (car lista) listaMenores) listaMayores)
+        )
+        ((> (car lista) separador)
+            (xMayMenAux (cdr lista) separador listaMenores (cons (car lista) listaMayores))
+        )
+        (else
+            (xMayMenAux (cdr lista) separador listaMenores listaMayores)
         )
     )
 )

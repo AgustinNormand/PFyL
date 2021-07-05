@@ -1,6 +1,6 @@
 #lang racket
 
-; TO-FIX
+; TO-FIX  
 
 (define (sublistas lista)
     (subListasAux lista '())
